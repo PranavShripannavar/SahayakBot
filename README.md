@@ -1,16 +1,16 @@
 # SahayakBot
 
-Text-only English/Hindi/Marathi welfare-scheme guidance and crisis handoff for rural and semi-urban India. Gemini produces cautious, plain-language next steps; urgent cases route to a real volunteer.
+SahayakBot is a text-only English, Hindi, and Marathi welfare-scheme navigator for rural and semi-urban India. Gemini provides cautious, plain-language next steps; urgent or complex cases can be handed to a real volunteer.
 
 ## Why it fits Caspian Buildathon
 
 - One `@client.on_message` handler serves every connected channel.
-- Connect WhatsApp for citizen-facing English/Hindi/Marathi chat and Email for volunteer handoffs. The same handler can also answer an Email message, proving inbound multi-channel support.
-- The handoff is real: a configured Telegram recipient receives an actual Caspian message. No simulated alerts.
+- Email and Telegram are connected and verified through that same handler.
+- Urgent or complex cases trigger a real Email handoff to a configured volunteer. Nothing is simulated.
 
 ## Safety stance
 
-SahayakBot is guidance, not a government authority or emergency service. It does not guarantee eligibility, benefits, or medical outcomes. It keeps scheme claims in `data/schemes.json`, links to official verification sites, and does not store transcripts or sender identifiers.
+SahayakBot provides guidance, not official eligibility decisions, emergency response, or medical advice. It does not guarantee benefits or outcomes. It links to official verification sites and does not persist transcripts or sender identifiers.
 
 ## Setup
 
@@ -22,12 +22,12 @@ py -m venv .venv
 pip install -r requirements.txt
 caspian init
 caspian connect email --name "SahayakBot"
-# WhatsApp is a paid Caspian channel; request Buildathon starter credit before connecting it.
-caspian connect whatsapp --name "SahayakBot"
+# Create a Telegram bot via @BotFather, then paste its token only at the prompt.
+caspian connect telegram --name "SahayakBot"
 Copy-Item .env.example .env
 ```
 
-Create a free-tier Gemini key in Google AI Studio, add it as `GEMINI_API_KEY` in `.env`, then fill in the Email connection ID and volunteer email emitted/used by Caspian. Then run:
+Create a Gemini API key in Google AI Studio and add it as `GEMINI_API_KEY` in `.env`. Set `EMAIL_CONNECTION_ID` to Caspian's Email connection ID and set `VOLUNTEER_EMAIL` to the consenting volunteer's Email address. Then run:
 
 ```powershell
 python app.py
@@ -35,19 +35,20 @@ python app.py
 
 ## Live demo script
 
-1. Send a Hindi WhatsApp message: “मेरे पिता 70 वर्ष के हैं। क्या उन्हें पेंशन मिल सकती है?”
-2. Show the WhatsApp reply with cautious eligibility guidance, documents, and the official place to verify.
-3. Send a genuinely urgent test message with your volunteer’s consent. Show the real Email handoff.
-4. Send a normal Email message to the same bot and show it responding from the same `on_message` function.
+1. Start `app.py`, showing that SahayakBot listens on all Caspian channels.
+2. Send a Marathi Telegram message: `माझे वडील 70 वर्षांचे आहेत. त्यांना वृद्धापकाळ पेन्शन मिळू शकते का?`
+3. Show the real Telegram reply with cautious guidance, documents, and an official place to verify.
+4. Send a genuinely urgent test Email with the volunteer's consent, then show both the user reply and the actual volunteer handoff.
+5. Show that the same handler also answers a normal Email message.
 
-Never present a test escalation as a real emergency, and obtain the volunteer's consent before recording the demo.
+Never present a test escalation as a real emergency, and obtain the volunteer's consent before recording.
 
 ## Gemini free-tier privacy note
 
-Gemini's free tier has limited availability/rate limits and Google states that submitted content may be used to improve its products. Use only consenting test participants in the demo; do not send real identity documents, Aadhaar numbers, medical records, or other sensitive information.
+Gemini's free tier can have rate limits and Google states that submitted content may be used to improve its products. Use only consenting test participants in the demo; do not send real identity documents, Aadhaar numbers, medical records, or other sensitive information.
 
 ## Before public submission
 
 - Verify every scheme fact against the official scheme portal and record the verification date.
-- Keep `.env` private and make the repository public only after secret scanning.
-- Record a continuous demo video that shows actual messages arriving on both connected channels.
+- Keep `.env` private and scan the repository for secrets before submission.
+- Record a continuous live demo showing messages arriving on both Email and Telegram.
