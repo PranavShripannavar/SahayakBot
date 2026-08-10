@@ -24,6 +24,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 ROOT = Path(__file__).parent
 SCHEMES = json.loads((ROOT / "data" / "schemes.json").read_text(encoding="utf-8"))
 MODEL = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
+JANYOJANA_URL = "https://jan-yojna.vercel.app/"
 VOLUNTEER_CONNECTION = os.getenv("EMAIL_CONNECTION_ID", "")
 VOLUNTEER_RECIPIENT = os.getenv("VOLUNTEER_EMAIL", "")
 DEMO_AUTO_ESCALATE = os.getenv("DEMO_AUTO_ESCALATE", "false").lower() == "true"
@@ -46,6 +47,31 @@ def obvious_emergency(text: str) -> bool:
     return any(word in normalized for word in EMERGENCY_WORDS)
 
 
+def asks_about_eligibility(text: str) -> bool:
+    """Recognize questions that benefit from Janyojana's scheme finder."""
+    normalized = text.lower()
+    terms = (
+        "eligible", "eligibility", "qualify", "qualification", "which scheme",
+        "which schemes", "welfare scheme", "government scheme", "pension",
+        "ayushman", "योजना", "पात्र", "योग्य", "हकदार", "पेंशन", "पेन्शन",
+        "मिळू", "मिल सकता", "मिल सकती",
+    )
+    return any(term in normalized for term in terms)
+
+
+def add_janyojana_link(reply: str, user_text: str) -> str:
+    """Always provide the project scheme finder when eligibility is discussed."""
+    if not asks_about_eligibility(user_text) or JANYOJANA_URL in reply:
+        return reply
+    if any(word in user_text for word in ("माझे", "आहेत", "त्यांना", "पेन्शन", "मिळू")):
+        label = "तुमच्या पात्रतेनुसार योजना पाहा"
+    elif any(word in user_text for word in ("है", "हैं", "योजना", "पेंशन", "पात्र")):
+        label = "अपनी पात्रता के अनुसार योजनाएँ देखें"
+    else:
+        label = "Explore matching schemes on Janyojana"
+    return f"{reply}\n\n{label}: {JANYOJANA_URL}"
+
+
 def assess(text: str) -> dict[str, Any]:
     """Return constrained English/Hindi/Marathi scheme guidance for text."""
     prompt = f"""You are SahayakBot, a careful welfare-scheme navigator for India.
@@ -54,6 +80,8 @@ Support exactly three languages: English, Hindi (Devanagari), and Marathi
 writes another language, ask them to write in English, Hindi, or Marathi. You are not a government
 authority: never promise eligibility, payment, approval, or a medical outcome.
 Use only the scheme facts below. If information is uncertain, say how to verify it.
+When the user asks which schemes they may be eligible for, recommend the
+Janyojana scheme finder using this exact link: {JANYOJANA_URL}
 If the user describes immediate danger, state that the person should contact local
 emergency services and a trusted nearby person; do not claim that help was dispatched.
 
@@ -124,7 +152,9 @@ def on_message(message: Any) -> None:
         suffix = "\n\nI have alerted a volunteer to review this." if handoff_sent else ""
         if result["urgent"] and not handoff_sent:
             suffix += "\n\nPlease contact local emergency services or a trusted person nearby now."
-        message.reply((result.get("reply") or "I could not safely assess that. Please try again with a little more detail.") + suffix)
+        reply = result.get("reply") or "I could not safely assess that. Please try again with a little more detail."
+        reply = add_janyojana_link(reply, transcript)
+        message.reply(reply + suffix)
         log.info("Reply sent on %s", getattr(message, "channel", "unknown"))
     except Exception:
         log.exception("Message processing failed")

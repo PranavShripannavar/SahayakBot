@@ -7,6 +7,7 @@ SahayakBot is a text-only English, Hindi, and Marathi welfare-scheme navigator f
 - One `@client.on_message` handler serves every connected channel.
 - Email and Telegram are connected and verified through that same handler.
 - Urgent or complex cases trigger a real Email handoff to a configured volunteer. Nothing is simulated.
+- Eligibility-related questions receive a direct link to [Janyojana](https://jan-yojna.vercel.app/), the project's scheme-finder website.
 
 ## Safety stance
 
