@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ignoaps",
+    "name": "Indira Gandhi National Old Age Pension Scheme (IGNOAPS)",
+    "category": "pension",
+    "eligibility_summary": "For eligible older persons in Below Poverty Line households; state implementation and pension amount can vary.",
+    "documents": ["age proof", "identity document", "BPL/ration-card evidence where applicable", "bank account details"],
+    "where_to_start": "Gram Panchayat, municipal office, or Common Service Centre (CSC)",
+    "verify_url": "https://nsap.nic.in/"
+  },
+  {
+    "id": "pmjay",
+    "name": "Ayushman Bharat PM-JAY",
+    "category": "health",
+    "eligibility_summary": "Health-cover eligibility must be checked against the official beneficiary database; do not assume eligibility from income alone.",
+    "documents": ["identity document", "mobile number", "family/ration-card details if available"],
+    "where_to_start": "Ayushman Mitra desk at an empanelled hospital or the official beneficiary portal",
+    "verify_url": "https://pmjay.gov.in/"
+  }
+]
