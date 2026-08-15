@@ -41,6 +41,7 @@ python app.py
 3. Show the real Telegram reply with cautious guidance, documents, and an official place to verify.
 4. Send a genuinely urgent test Email with the volunteer's consent, then show both the user reply and the actual volunteer handoff.
 5. Show that the same handler also answers a normal Email message.
+6. Test both Email and Telegram before the demo.
 
 Never present a test escalation as a real emergency, and obtain the volunteer's consent before recording.
 
