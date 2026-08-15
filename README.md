@@ -11,7 +11,7 @@ SahayakBot is a text-only English, Hindi, and Marathi welfare-scheme navigator f
 
 ## Safety stance
 
-SahayakBot provides guidance, not official eligibility decisions, emergency response, or medical advice. It does not guarantee benefits or outcomes. It links to official verification sites and does not persist transcripts or sender identifiers.
+SahayakBot provides guidance, not official eligibility decisions, emergency response, or medical advice. It does not guarantee benefits or outcomes. It links to official verification sites and does not persist transcripts or sender identifiers. For an urgent or complex handoff, the sender's Email address or Telegram identifier is included only in the volunteer alert so the volunteer can follow up; the alert instructs them not to store or share it.
 
 ## Setup
 

@@ -108,16 +108,36 @@ Return valid JSON only with this shape:
     return data
 
 
+def volunteer_contact(message: Any) -> str:
+    """Format the sender contact for a volunteer-only urgent handoff."""
+    sender = getattr(message, "sender", None) or {}
+    if not isinstance(sender, dict):
+        sender = {}
+    address = sender.get("address") or sender.get("email") or sender.get("username")
+    name = sender.get("name") or sender.get("display_name")
+    if not address:
+        return "Not supplied by the channel"
+    channel = getattr(message, "channel", "unknown")
+    if channel == "email":
+        label = "Email address"
+    elif channel == "telegram":
+        label = "Telegram user/chat identifier"
+    else:
+        label = "Channel contact"
+    return f"{label}: {address}" + (f" ({name})" if name else "")
+
+
 def escalation_text(message: Any, transcript: str, analysis: dict[str, Any]) -> str:
-    # Share only what a volunteer needs. Do not persist transcripts or sender IDs.
+    # Share contact only in the volunteer alert; do not persist it locally.
     source = getattr(message, "channel", "unknown channel")
     return (
         "SAHAYAKBOT — volunteer handoff\n\n"
         f"Source channel: {source}\n"
+        f"Contact for urgent follow-up: {volunteer_contact(message)}\n"
         f"Urgent: {'yes' if analysis['urgent'] else 'no'}\n"
         f"Summary: {analysis.get('handoff_summary', 'User requests scheme-navigation help.')}\n"
         f"User message: {transcript}\n\n"
-        "Please respond through the shared Caspian conversation; do not request unnecessary documents."
+        "Privacy: use this contact only to follow up on this urgent case. Do not store or share it, and do not request unnecessary documents."
     )
 
 
