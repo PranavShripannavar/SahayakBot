@@ -53,7 +53,3 @@ Gemini's free tier can have rate limits and Google states that submitted content
 - Verify every scheme fact against the official scheme portal and record the verification date.
 - Keep `.env` private and scan the repository for secrets before submission.
 - Record a continuous live demo showing messages arriving on both Email and Telegram.
-
-## Contributors
-
-- [sarthak0101-lgtm](https://github.com/sarthak0101-lgtm)
